@@ -1,0 +1,36 @@
+* {
+  font-family: sans-serif;
+}
+
+.favorito {
+  background-color: #ccc;
+  border: none;
+  border-radius: 4px;
+}
+
+.favorito:hover {
+  background-color: #eee;
+}
+
+.favorito-activo {
+  background-color: #cc0033;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.favorito-activo:hover {
+  background-color: #ee0033;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.favoritos {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

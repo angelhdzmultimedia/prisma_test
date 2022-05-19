@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="style.css" rel="stylesheet" />
+    <title>My App</title>
+  </head>
+  <body>
+    <h1>Todos</h1>
+    <ul class="posts"></ul>
+
+    <h1>Favoritos</h1>
+    <ul class="favoritos"></ul>
+    <script>
+      const postsList = document.querySelector('.posts');
+      const favList = document.querySelector('.favoritos');
+      const posts = [];
+
+      // Usuario actual
+      const user = {
+        name: 'Angel',
+        id: '09asd023123',
+      };
+
+      async function getPosts() {
+        const response = await fetch('http://localhost:3000/posts');
+        const _posts = await response.json();
+
+        postsList.innerHTML = favList.innerHTML = '';
+
+        _posts.forEach((post) => {
+          const favorito = post.favoritos.includes(user.id);
+          const seccion = favorito ? favList : postsList;
+
+          const li = `
+          <li>
+            <span>${post.titulo}</span>
+            <button class="${
+              favorito ? 'favorito-activo' : 'favorito'
+            }" onclick="favorito(${post.id})">❤</button>
+            </li>
+          `;
+          if (favorito) favList.innerHTML += li;
+          postsList.innerHTML += li;
+          posts.push(post);
+        });
+      }
+
+      function favorito(id) {
+        const post = posts.find((item) => item.id === id);
+        // Si el array de favoritos incluye el id del usuario actual
+        const favorito = post.favoritos.includes(user.id);
+
+        if (favorito) {
+          // Si existe, removerlo de ahi
+          post.favoritos.splice(user.id, 1);
+        } else {
+          // Si no existe, añadirlo
+          post.favoritos.push(user.id);
+        }
+
+        // Actualizar los datos en la API
+        fetch('http://localhost:3000/posts', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(post),
+        });
+
+        getPosts();
+      }
+
+      // Volver a solicitar los posts para que se redibujen
+      getPosts();
+    </script>
+  </body>
+</html>
